@@ -115,7 +115,6 @@ export const logout = (req, res) => {
 
 export const updateUserInfo = async (userId, updates) => {
   try {
-    console.log("Update user info request received", userId, updates);
     const updatedUser = await User.findByIdAndUpdate(userId, updates, {
       new: true,
     });
@@ -123,8 +122,6 @@ export const updateUserInfo = async (userId, updates) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("User info updated for userId:", userId);
-    console.log("Updated user data:", updatedUser);
     return updatedUser;
   } catch (error) {
     console.error("Error updating user info:", error);
