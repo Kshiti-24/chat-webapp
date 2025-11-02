@@ -5,17 +5,37 @@ import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
 import { BiXCircle } from "react-icons/bi";
 import { useAuthContext } from "../../context/AuthContext";
-import { extractTime } from "../../utils/extractTime";
 import { useState } from "react";
+import { formatLastSeen } from "../../utils/formatLastSeen";
+import { useSocketContext } from "../../context/SocketContext";
 
 const MessageContainer = () => {
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation, updateConversation } =
+    useConversation();
+  const { onlineUsers } = useSocketContext();
 
   useEffect(() => {
     return () => {
       setSelectedConversation(null);
     };
   }, [setSelectedConversation]);
+
+  useEffect(() => {
+    if (!selectedConversation) return;
+
+    const isOnline = onlineUsers.includes(selectedConversation._id);
+
+    if (isOnline) {
+      updateConversation({
+        currentStatus: "online",
+      });
+    } else {
+      updateConversation({
+        currentStatus: "offline",
+        lastActive: new Date().toISOString(),
+      });
+    }
+  }, [onlineUsers, selectedConversation?._id]);
 
   return (
     <div className="md:min-w-[450px] flex flex-col">
@@ -65,20 +85,20 @@ const StatusWithDelay = ({ conversation }) => {
       if (conversation?.currentStatus === "online") {
         setStatusText("online");
       } else {
-        setStatusText(`last seen ${extractTime(conversation?.lastActive)}`);
+        setStatusText(formatLastSeen(conversation?.lastActive));
       }
       setShowStatus(true);
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [conversation]);
+  }, [conversation?.currentStatus, conversation?.lastActive]);
 
   return (
-    <div className="relative h-5 overflow-hidden">
+    <div className="relative h-5">
       {showStatus && (
         <span
           key={statusText}
-          className={`absolute text-sm ${
+          className={`text-sm ${
             conversation?.currentStatus === "online"
               ? "text-green-400"
               : "text-gray-200"
