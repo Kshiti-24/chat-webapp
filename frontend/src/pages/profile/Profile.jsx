@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuthContext } from "../../context/authContext";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
