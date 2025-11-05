@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../../context/authContext";
+import { useAuthContext } from "../../context/AuthContext";
 
 const ProfileIcon = () => {
   const { authUser } = useAuthContext();
