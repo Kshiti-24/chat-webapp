@@ -16,9 +16,6 @@ export function formatLastSeen(dateString) {
 
   const time = formatTime(date);
 
-  console.log(dateString);
-  console.log(time);
-
   if (isToday) return `last seen today at ${time}`;
   if (isYesterday) return `last seen yesterday at ${time}`;
 

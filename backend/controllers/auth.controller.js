@@ -128,3 +128,44 @@ export const updateUserInfo = async (userId, updates) => {
     throw error;
   }
 };
+
+export const updateUserData = async (req, res) => {
+  try {
+    const updates = req.body.updatedData || req.body;
+    const userId = updates.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User id is required" });
+    }
+
+    // Do not allow changing _id
+    delete updates._id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      fullName: updatedUser.fullName,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      profilePicture: updatedUser.profilePicture,
+      gender: updatedUser.gender,
+      phoneNumber: updatedUser.phoneNumber,
+      bio: updatedUser.bio,
+      location: updatedUser.location,
+      currentStatus: updatedUser.currentStatus,
+      lastActive: updatedUser.lastActive,
+      additionalInfo: updatedUser.additionalInfo,
+      socialLinks: updatedUser.socialLinks,
+    });
+  } catch (error) {
+    console.error("Error in updateUserData:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
