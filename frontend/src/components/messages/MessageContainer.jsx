@@ -32,7 +32,6 @@ const MessageContainer = () => {
     } else {
       updateConversation({
         currentStatus: "offline",
-        lastActive: new Date().toISOString(),
       });
     }
   }, [onlineUsers, selectedConversation?._id]);
@@ -55,7 +54,7 @@ const MessageContainer = () => {
                   {selectedConversation?.fullName}
                 </span>
 
-                <StatusWithDelay conversation={selectedConversation} />
+                {/* <StatusWithDelay conversation={selectedConversation} /> */}
               </div>
             </div>
 
